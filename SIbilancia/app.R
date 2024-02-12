@@ -54,20 +54,16 @@ ui <- fluidPage(
     numericInput("sd", "Scarto tipo di ripetibilità (g):", 0.01, min = 0, max = 10),
 
     DT::DTOutput("eccentricity1"),
-    actionButton("ecc1calc", label = "Calcola")
+    textOutput("maxdiff"),
+    textOutput("uncecc"),
+    textOutput("result")
 
 )
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
 
-  eccentricity_df <- data.frame(posizione = 1:5,
-                                lettura = rep(NA, times = 5),
-                                DI = rep(NA, times = 5)
-  )
-
-  ecc1 <- reactiveValues(data = eccentricity_df)
-
+  # certificate title
   output$idcert <- renderText({
     paste0("Certificato: ",
            input$inst,
@@ -75,26 +71,90 @@ server <- function(input, output) {
            input$date)
   })
 
+  # get the decimal places of a number
+  # from https://stackoverflow.com/questions/5173692/how-to-return-number-of-decimal-places-in-r
+  # @nisetama
+  decimalplaces <- function(x) {
+    if (abs(x - round(x)) > .Machine$double.eps^0.5) {
+      sapply(x, function(y){
+        nchar(
+          sub("^-?\\d*\\.?","",
+                  format(y, scientific = F)
+              )
+          )
+      })
+    } else {
+      return(0)
+    }
+  }
 
+  # significant digits
+  mysignifdigits <- reactive({ decimalplaces(input$nfor) })
+
+  # empty dataframe for eccentricity
+  eccentricity_df <- data.frame(posizione = 1:5,
+                                lettura = rep(NA, times = 5),
+                                DI = rep(NA, times = 5)
+  )
+
+  # for the first set of eccentricity measurements
+  ecc1 <- reactiveValues(data = eccentricity_df)
+
+
+
+  # eccentricity table
   output$eccentricity1 <- DT::renderDT(ecc1$data,
                                        style = "bootstrap",
                                        options = list(dom = 't', ordering = FALSE),
-                                       colnames = c("Posizione", "Lettura", "Variazione rispetto alla posizione 1"),
+                                       colnames = c("Posizione", "Lettura", "Differenza rispetto alla posizione 1"),
                                        rownames = FALSE,
                                        editable = list(target = "column",
                                                        numeric = 2,
                                                        disable = list(columns = c(0, 2)))
   )
 
-  observeEvent(input$ecc1calc, {
-    req(input$eccentricity1_cell_edit)
+  # when the table is edited the differences are computed
+  observeEvent(input$eccentricity1_cell_edit, {
+    req(mysignifdigits())
 
     ecc1$data <- DT::editData(ecc1$data, input$eccentricity1_cell_edit, "eccentricity1", rownames = FALSE)
-
-    ecc1$data$DI <- ecc1$data$lettura - ecc1$data$lettura[1]
+    ecc1$data$DI <- abs(ecc1$data$lettura - ecc1$data$lettura[1]) |> round(mysignifdigits())
 
   })
+
+# non NA elements in the first eccentricity table
+ecc1length <- reactive({
+  ecc1$data$DI[!is.na(ecc1$data$DI)] |>
+    length()
+  })
+
+# max difference due to eccentricity
+ecc1result <- reactive({
+  req(ecc1length() == 5)
+  req(mysignifdigits())
+
+  maxdiff <- max(ecc1$data$DI)
+  unc <- (maxdiff/(2 * sqrt(3))) |>
+    round(mysignifdigits()) |>
+    format(scientific = FALSE)
+
+  list(maxdiff = maxdiff,
+       uncecc = unc,
+       result = ifelse(maxdiff > 3 * input$sd,
+                       "non è possibile proseguire con la taratura",
+                       "conforme"
+                       )
+       )
+
+})
+
+output$maxdiff <- renderText(ecc1result()$maxdiff)
+output$uncecc <- renderText(ecc1result()$uncecc)
+output$result <- renderText(ecc1result()$result)
+
+
 }
+
 
 # Run the application
 shinyApp(ui = ui, server = server)
