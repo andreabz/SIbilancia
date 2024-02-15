@@ -3,15 +3,43 @@
 #' @param request Internal parameter for `{shiny}`.
 #'     DO NOT REMOVE.
 #' @import shiny
+#' @importFrom bslib page_navbar nav_panel nav_spacer
 #' @noRd
 app_ui <- function(request) {
   tagList(
     # Leave this function for adding external resources
     golem_add_external_resources(),
     # Your application UI logic
-    fluidPage(
-      h1("SIbilancia")
-    )
+    bslib::page_navbar(
+      title = "SI bilancia",
+      window_title = "SI precisa",
+      theme = bslib::bs_theme(bootswatch = "cosmo",
+                              version = 5,
+                              "navbar-bg" = "#2780E3",
+                              "navbar-brand-font-size" = "2rem"),
+      inverse = TRUE,
+      fluid = TRUE,
+      collapsible = TRUE,
+      lang = "it",
+
+      bslib::nav_panel("Bilancia", value = "scale", mod_01_device_ui("scale")),
+      bslib::nav_panel("Taratura", value = "calibration", ""),
+      bslib::nav_panel("Misure", value = "measurement", ""),
+      bslib::nav_panel("Report", value = "report", ""),
+
+      bslib::nav_spacer(),
+
+      bslib::nav_menu("Leggimi",
+                      align = "right",
+
+                      bslib::nav_panel("Per iniziare", value = "readme", ""),
+                      bslib::nav_panel("Esempi", value = "readme", ""),
+                      bslib::nav_panel("Validazione", value = "readme", ""),
+                      bslib::nav_panel("Versioni", value = "readme", ""),
+                      bslib::nav_panel("Struttura", value = "readme", "")
+                      )
+
+      )
   )
 }
 
@@ -33,7 +61,7 @@ golem_add_external_resources <- function() {
     favicon(),
     bundle_resources(
       path = app_sys("app/www"),
-      app_title = "SIbilancia"
+      app_title = "SI bilancia"
     )
     # Add here other external resources
     # for example, you can add shinyalert::useShinyalert()
