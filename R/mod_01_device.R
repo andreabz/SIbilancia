@@ -10,15 +10,14 @@
 #' @noRd
 #'
 #' @import shiny
-#' @importFrom bslib card card_header card_footer card_body layout_column_wrap
-#' @importFrom htmltools css
+#' @importFrom bslib card card_header card_body layout_column_wrap
+#' @importFrom htmltools css tags
 mod_01_device_ui <- function(id) {
   ns <- NS(id)
   tagList(
-
     bslib::layout_column_wrap(
       width = NULL,
-      style = htmltools::css(grid_template_columns = "2fr 2fr 1fr"),
+      style = htmltools::css(grid_template_columns = "2fr 1fr"),
 
       #### instrument details ----
       bslib::card(
@@ -55,56 +54,35 @@ mod_01_device_ui <- function(id) {
 
       ),
 
-          #### calibration details ----
-          bslib::card(
-            bslib::card_header(shiny::icon("book"), "Metodo"),
-            bslib::card_body(
 
-                textInput(
-                  ns("docref"),
-                  "Documento di riferimento",
-                  "Gestione bilance e pesiere (IOP-GEAP-01-AR)"
-                ),
-                textInput(ns("doced"), "Edizione:"),
-                textInput(ns("docver"), "Versione:"),
-                dateInput(ns("docdate"), "Data di emissione:", language = "it")
-            )
-          ),
-
-    bslib::accordion(
-      id = "help",
-      open = "todo",
-      bslib::accordion_panel(icon = shiny::icon("circle-info"),
-                             title = "Cosa ti serve",
-                             value = "todo",
-                             ""),
-      bslib::accordion_panel(icon = shiny::icon("lightbulb"),
-                             title = "Suggerimento",
-                             value = "tips",
-                             ""),
-      bslib::accordion_panel(icon = shiny::icon("vials"),
-                             title = "Cosa otterrai",
-                             tips = "toget",
-                             "")
-    )
-
-    ),
-
-    #### sample details
-    bslib::card(
-      bslib::card_header(shiny::icon("weight-hanging"), "Campioni"),
-      bslib::card_body(
-        bslib::layout_columns(
-          col_widths = c(6, 6),
-
-          textInput(ns("refsampleid"), "Sigla dei campioni:"),
-          textInput(ns("refcertid"), "Certificato di taratura:"),
-          textInput(ns("reflatid"), "Identificativo dei centri LAT:"),
-          dateInput(ns("certval"), "Data di scadenza dei certificati:", language = "it")
+      bslib::accordion(
+        id = "help",
+        open = "todo",
+        bslib::accordion_panel(
+          icon = shiny::icon("circle-info"),
+          title = "Cosa ti serve",
+          value = "todo",
+          ""
+        ),
+        bslib::accordion_panel(
+          icon = shiny::icon("lightbulb"),
+          title = "Suggerimento",
+          value = "tips",
+          ""
+        ),
+        bslib::accordion_panel(
+          icon = shiny::icon("vials"),
+          title = "Cosa otterrai",
+          tips = "toget",
+          ""
         )
       )
+    ),
 
-    )
+      tags$div(style = "padding-bottom: 15px",
+          actionButton(ns("next"), "Avanti", width = '10%')
+      )
+
   )
 }
 
