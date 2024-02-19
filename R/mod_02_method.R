@@ -22,6 +22,7 @@ mod_02_method_ui <- function(id){
 
       #### calibration details ----
       bslib::card(
+        fill = FALSE,
         bslib::card_header(shiny::icon("book"), "Metodo"),
         bslib::card_body(
 
@@ -38,6 +39,7 @@ mod_02_method_ui <- function(id){
 
       #### sample details ----
       bslib::card(
+        fill = FALSE,
         bslib::card_header(shiny::icon("weight-hanging"), "Campioni"),
         bslib::card_body(
 
@@ -73,7 +75,7 @@ mod_02_method_ui <- function(id){
       )
     ),
 
-      tags$div(style = "padding-bottom: 15px",
+      tags$div(style = "padding-top: 15px",
                actionButton(ns("next"), "Avanti", width = '10%')
       )
 

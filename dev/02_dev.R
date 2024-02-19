@@ -22,6 +22,7 @@ attachment::att_amend_desc()
 ## Create a module infrastructure in R/
 golem::add_module(name = "01_device", with_test = TRUE) # Name of the module
 golem::add_module(name = "02_method", with_test = TRUE) # Name of the module
+golem::add_module(name = "03_measure", with_test = TRUE) # Name of the module
 golem::add_module(name = "name_of_module2", with_test = TRUE) # Name of the module
 
 ## Add helper functions ----

@@ -21,6 +21,7 @@ mod_01_device_ui <- function(id) {
 
       #### instrument details ----
       bslib::card(
+        fill = FALSE,
         bslib::card_header(
           shiny::icon("scale-balanced"),
           "Caratteristiche della bilancia"
@@ -47,7 +48,12 @@ mod_01_device_ui <- function(id) {
               0.0001,
               min = 0,
               max = 0.01
-            )
+            ),
+            radioButtons(ns("nint"),
+                         "Numero di intervalli di taratura:",
+                         choices = c("1" = 1,
+                                     "2" = 2),
+                         inline = TRUE)
           )
 
         )
@@ -79,7 +85,7 @@ mod_01_device_ui <- function(id) {
       )
     ),
 
-      tags$div(style = "padding-bottom: 15px",
+      tags$div(style = "padding-top: 15px",
           actionButton(ns("next"), "Avanti", width = '10%')
       )
 
