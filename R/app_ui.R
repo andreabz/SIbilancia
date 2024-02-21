@@ -11,6 +11,7 @@ app_ui <- function(request) {
     golem_add_external_resources(),
     # Your application UI logic
     bslib::page_navbar(
+      id = "mainmenu",
       title = "SI bilancia",
       window_title = "SI precisa",
       theme = bslib::bs_theme(bootswatch = "cosmo",
@@ -24,7 +25,14 @@ app_ui <- function(request) {
 
       bslib::nav_panel("Bilancia", value = "scale", mod_01_device_ui("scale")),
       bslib::nav_panel("Taratura", value = "calibration", mod_02_method_ui("calibration")),
-      bslib::nav_panel("Misure", value = "measurement", mod_03_measure_ui("measure")),
+
+
+      bslib::nav_menu("Misure",
+                      value = "measurement",
+                      bslib::nav_panel("Condizioni", value = "environment", mod_03_environment_ui("environment"))
+
+                      ),
+
       bslib::nav_panel("Report", value = "report", ""),
 
       bslib::nav_spacer(),
