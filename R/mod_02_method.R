@@ -10,15 +10,14 @@
 #' @noRd
 #'
 #' @import shiny
-#' @importFrom bslib card card_header card_body layout_column_wrap
-#' @importFrom htmltools css tags
+#' @importFrom bslib card card_header card_body layout_column_wrap accordion accordion_panel
+#' @importFrom htmltools tags
 mod_02_method_ui <- function(id){
   ns <- NS(id)
   tagList(
 
     bslib::layout_column_wrap(
-      width = NULL,
-      style = htmltools::css(grid_template_columns = "2fr 2fr 1fr"),
+      width = 1/3,
 
       #### calibration details ----
       bslib::card(
@@ -75,8 +74,8 @@ mod_02_method_ui <- function(id){
       )
     ),
 
-      tags$div(style = "padding-top: 15px",
-               actionButton(ns("next"), "Avanti", width = '10%')
+      tags$div(style = "padding-bottom: 30px",
+               actionButton(ns("nextbtn"), "Avanti", width = '10%')
       )
 
   )
@@ -85,9 +84,24 @@ mod_02_method_ui <- function(id){
 #' 02_method Server Functions
 #'
 #' @noRd
-mod_02_method_server <- function(id){
+mod_02_method_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+
+    mynamespace <- environment(ns)[['namespace']]
+    r[[mynamespace]] <- shiny::reactiveValues()
+
+    #### saving all the inputs ----
+    observeEvent(input$nextbtn, {
+
+      inputnames <- names(input)
+      savename <- inputnames[inputnames %not_in% "nextbtn"]
+
+      lapply(savename, function (x) {
+        r[[mynamespace]][[x]] <- input[[x]]
+      })
+
+    })
 
   })
 }

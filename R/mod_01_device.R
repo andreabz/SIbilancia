@@ -51,8 +51,8 @@ mod_01_device_ui <- function(id) {
             ),
             radioButtons(ns("nint"),
                          "Numero di intervalli di taratura:",
-                         choices = c("1" = 1,
-                                     "2" = 2),
+                         choices = c("1" = 1L,
+                                     "2" = 2L),
                          inline = TRUE)
           )
 
@@ -85,8 +85,8 @@ mod_01_device_ui <- function(id) {
       )
     ),
 
-      tags$div(style = "padding-top: 15px",
-          actionButton(ns("next"), "Avanti", width = '10%')
+      tags$div(style = "padding-bottom: 30px",
+          actionButton(ns("nextbtn"), "Avanti", width = '10%')
       )
 
   )
@@ -95,9 +95,27 @@ mod_01_device_ui <- function(id) {
 #' 01_device Server Functions
 #'
 #' @noRd
-mod_01_device_server <- function(id){
+mod_01_device_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+
+    mynamespace <- environment(ns)[['namespace']]
+    r[[mynamespace]] <- shiny::reactiveValues()
+
+    #### saving all the inputs ----
+    observeEvent(input$nextbtn, {
+
+      inputnames <- names(input)
+      savename <- inputnames[inputnames %not_in% "nextbtn"]
+
+      lapply(savename, function (x) {
+        r[[mynamespace]][[x]] <- input[[x]]
+      })
+
+      #### adding the significant digits ----
+      r[[mynamespace]][["signifdigits"]] <- decimalplaces(r[[mynamespace]][["nfor"]])
+
+    })
 
   })
 }
