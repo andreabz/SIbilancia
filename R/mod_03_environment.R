@@ -12,6 +12,7 @@
 #' @import shiny
 #' @importFrom bslib card card_header card_body layout_column layout_column_wrap accordion accordion_panel
 #' @importFrom htmltools tags css
+#' @importFrom glue glue
 mod_03_environment_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -143,10 +144,10 @@ mod_03_environment_server <- function(id, r){
 
     output$tempcheck <- renderText({
 
-      ifelse(tempdiff() <= tempreq(),
-             paste0("La differenza tra la temperatura iniziale e finale è ≤", tempreq(), "°C ", shiny::icon("check")),
-             paste0("La differenza tra la temperatura iniziale e finale è >", tempreq(), "°C ", shiny::icon("xmark"))
-      )
+      mycol <- ifelse(tempdiff() <= tempreq(), "text-success", "text-warning")
+      mysign <- ifelse(tempdiff() <= tempreq(), "≤", ">")
+
+      glue::glue("</br> <p class = {mycol}> La differenza tra la temperatura iniziale e finale è {mysign} {tempreq()} °C</p>")
 
     })
 
