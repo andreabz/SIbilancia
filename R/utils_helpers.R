@@ -46,3 +46,14 @@ mysigformat <- function(x, digits) {
     format(scientific = FALSE)
 
 }
+#' Make a warning text.
+#'
+#' @description Put some text in a HTML paragraph with warning colors.
+#'
+#' @param x a string.
+#' @return a HTML p using the text-warning class.
+#'
+#' @importFrom glue glue
+mywarning <- function(x) {
+  glue::glue("<p class = text-warning> {x} </p>")
+}
