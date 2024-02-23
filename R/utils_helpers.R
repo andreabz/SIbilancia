@@ -46,6 +46,7 @@ mysigformat <- function(x, digits) {
     format(scientific = FALSE)
 
 }
+
 #' Make a warning text.
 #'
 #' @description Put some text in a HTML paragraph with warning colors.
@@ -56,4 +57,29 @@ mysigformat <- function(x, digits) {
 #' @importFrom glue glue
 mywarning <- function(x) {
   glue::glue("<p class = text-warning> {x} </p>")
+}
+
+#' Add an image.
+#'
+#' @description adding a png image in a HTML block.
+#'
+#' @param filename the name of a png file in /inst/app/www/.
+#' @return a HTML block with the required image.
+#'
+#' @importFrom shiny tags
+add_www_img <- function(filename) {
+  myfilename <- paste0("inst/app/www/", filename)
+
+  stopifnot(
+    is.character(filename),
+    file.exists(myfilename),
+    grepl("\\.png$", filename)
+    )
+
+  shiny::tags$img(src = paste0("www/", filename),
+                  style = "height:90%;
+                           width:auto;
+                           display:block;
+                           margin-left:auto;
+                           margin-right:auto;")
 }
