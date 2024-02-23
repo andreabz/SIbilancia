@@ -63,7 +63,7 @@ mod_03_environment_ui <- function(id){
             dateInput(ns("terminitdate"), "Data di taratura:", language = "it"),
             dateInput(ns("termenddate"), "Data di scadenza della taratura:", language = "it"),
 
-            htmlOutput(ns("tempcheck"), style = "padding-top: 20px;")
+            htmlOutput(ns("tempcheck"), style = "padding-top: 5px;")
           )
 
         )
