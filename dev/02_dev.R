@@ -27,11 +27,14 @@ golem::add_module(name = "04_measure", with_test = TRUE) # Name of the module
 golem::add_module(name = "041_eccentricity", with_test = TRUE) # Name of the module
 golem::add_module(name = "042_repeatability", with_test = TRUE) # Name of the module
 golem::add_module(name = "043_linearity", with_test = TRUE) # Name of the module
+golem::add_module(name = "05_report", with_test = TRUE) # Name of the module
 golem::add_module(name = "name_of_module2", with_test = TRUE) # Name of the module
 
 ## Add helper functions ----
 ## Creates fct_* and utils_*
 golem::add_fct("041_eccentricity", with_test = TRUE)
+golem::add_fct("042_repeatability", with_test = TRUE)
+golem::add_fct("043_linearity", with_test = TRUE)
 golem::add_utils("helpers", with_test = TRUE)
 
 ## External resources

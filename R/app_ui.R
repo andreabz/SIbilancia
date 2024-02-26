@@ -33,7 +33,7 @@ app_ui <- function(request) {
 
                       ),
 
-      bslib::nav_panel("Report", value = "report", ""),
+      bslib::nav_panel("Report", value = "report", mod_05_report_ui("report")),
 
       bslib::nav_spacer(),
 

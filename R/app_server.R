@@ -17,6 +17,7 @@ app_server <- function(input, output, session) {
   mod_02_method_server("calibration", r)
   mod_03_environment_server("environment", r)
   mod_04_measure_server("measure", r)
+  mod_05_report_server("report", r)
 
 
   ##### dinamically remove and add measurement panels ----
