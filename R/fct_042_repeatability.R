@@ -68,8 +68,8 @@ repeatabilityresult <- function(measures,
     as.numeric()
   mycol <- ifelse(myunc > givensd, "text-warning", "text-success")
   myres <- ifelse(myunc > givensd, "non conforme", "conforme")
-  mytext <- if(replength < 5) {
-    "Servono 5 misure." |> mywarning()
+  mytext <- if(replength < 10) {
+    "Servono 10 misure." |> mywarning()
   } else if (massload > maxcal) {
     "La massa impiegata non può eccedere il massimo dell'intervallo di taratura." |> mywarning()
   } else if (massload < mincal) {
