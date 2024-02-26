@@ -10,18 +10,17 @@
 #' @noRd
 #'
 #' @import shiny
-#' @importFrom bslib card card_header card_body layout_column_wrap accordion accordion_panel
-#' @importFrom htmltools tags
+#' @importFrom bslib card card_header card_body layout_columns accordion accordion_panel
 mod_02_method_ui <- function(id){
   ns <- NS(id)
   tagList(
 
-    bslib::layout_column_wrap(
-      width = 1/3,
+    bslib::layout_columns(
+      col_widths = 4,
+      fill = FALSE,
 
       #### calibration details ----
       bslib::card(
-        fill = FALSE,
         bslib::card_header(shiny::icon("book"), "Metodo"),
         bslib::card_body(
 
@@ -38,7 +37,6 @@ mod_02_method_ui <- function(id){
 
       #### sample details ----
       bslib::card(
-        fill = FALSE,
         bslib::card_header(shiny::icon("weight-hanging"), "Campioni"),
         bslib::card_body(
 
@@ -74,7 +72,7 @@ mod_02_method_ui <- function(id){
       )
     ),
 
-      tags$div(style = "padding-bottom: 30px",
+      tags$div(style = "padding-bottom: 15px",
                actionButton(ns("nextbtn"), "Avanti", width = '10%')
       )
 

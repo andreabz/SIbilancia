@@ -10,25 +10,23 @@
 #' @noRd
 #'
 #' @import shiny
-#' @importFrom bslib card card_header card_body layout_column_wrap
-#' @importFrom htmltools css tags
+#' @importFrom bslib card card_header card_body layout_columns
 mod_01_device_ui <- function(id) {
   ns <- NS(id)
   tagList(
-    bslib::layout_column_wrap(
-      width = NULL,
-      style = htmltools::css(grid_template_columns = "2fr 1fr"),
+    bslib::layout_columns(
+      col_widths = c(8, 4),
+      fill = FALSE,
 
       #### instrument details ----
       bslib::card(
-        fill = FALSE,
         bslib::card_header(
           shiny::icon("scale-balanced"),
           "Caratteristiche della bilancia"
         ),
         bslib::card_body(
-          bslib::layout_column_wrap(
-            width = 1 / 2,
+          bslib::layout_columns(
+            col_widths = 6,
 
             textInput(ns("inst"), "Strumento:"),
             textInput(ns("place"), "Collocazione:"),
@@ -85,7 +83,7 @@ mod_01_device_ui <- function(id) {
       )
     ),
 
-      tags$div(style = "padding-bottom: 30px",
+      tags$div(style = "padding-bottom: 15px",
           actionButton(ns("nextbtn"), "Avanti", width = '10%')
       )
 

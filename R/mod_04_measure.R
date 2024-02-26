@@ -172,7 +172,7 @@ mod_04_measure_ui <- function(id) {
     )
     ),
 
-    tags$div(style = "padding-bottom: 30px",
+    tags$div(style = "padding-bottom: 15px",
              actionButton(ns("nextbtn"), "Avanti", width = '10%'))
 
   )

@@ -10,26 +10,25 @@
 #' @noRd
 #'
 #' @import shiny
-#' @importFrom bslib card card_header card_body layout_column layout_column_wrap accordion accordion_panel
-#' @importFrom htmltools tags css
+#' @importFrom bslib card card_header card_body layout_columns accordion accordion_panel
 #' @importFrom glue glue
 mod_03_environment_ui <- function(id){
   ns <- NS(id)
   tagList(
     bslib::layout_columns(
       col_widths = c(6, 3, 3),
+      fill = FALSE,
 
       #### temperature ----
       bslib::card(
-        fill = FALSE,
         height = "400px",
         bslib::card_header(
           shiny::icon("temperature-three-quarters"),
           "Condizioni ambientali"
         ),
         bslib::card_body(
-          bslib::layout_column_wrap(
-            width = 1/2,
+          bslib::layout_columns(
+            col_widths = 6,
 
             numericInput(
               ns("tinit"),
@@ -73,7 +72,6 @@ mod_03_environment_ui <- function(id){
 
       #### checks ----
       bslib::card(
-        fill = FALSE,
         height = "400px",
         bslib::card_header(
           shiny::icon("square-check"),
@@ -116,7 +114,7 @@ mod_03_environment_ui <- function(id){
       )
     ),
 
-    tags$div(style = "padding-bottom: 30px",
+    tags$div(style = "padding-bottom: 15px",
              actionButton(ns("nextbtn"), "Avanti", width = '10%')
     )
 

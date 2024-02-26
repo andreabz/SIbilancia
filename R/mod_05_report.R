@@ -10,7 +10,7 @@
 #' @noRd
 #'
 #' @import shiny
-#' @importFrom bslib card card_header card_body navset_card_tab nav_panel layout_column_wrap
+#' @importFrom bslib card card_header card_body layout_columns
 #' @importFrom glue glue
 mod_05_report_ui <- function(id){
   ns <- NS(id)
