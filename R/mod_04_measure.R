@@ -1,4 +1,4 @@
-##' 03_method UI Function
+##' 04_method UI Function
 #'
 #' @description A shiny Module for the measurement tests in
 #' the {SIbilancia} shinyAPP.
@@ -50,7 +50,7 @@ mod_04_measure_ui <- function(id) {
     ),
 
     bslib::navset_card_tab(
-      height = 600,
+      #height = 700,
 
       ##### eccentricity ui ----
       bslib::nav_panel(
@@ -69,7 +69,10 @@ mod_04_measure_ui <- function(id) {
                 min = 0
               ),
 
-              DT::DTOutput(ns("eccentricity")),
+              DT::DTOutput(ns("eccentricity"))
+            ),
+
+            bslib::card_body(
               htmlOutput(ns("eccresult"))
             )
           ),
@@ -80,10 +83,11 @@ mod_04_measure_ui <- function(id) {
             bslib::card_header(shiny::icon("circle-info"), "Cosa devi fare"),
             bslib::card_body(
               list(
-                one = "Compila i campi sovrastanti;",
-                two = "carica la massa nelle posizioni indicate nello schema;",
-                three = "fai doppio click nella tabella per inserire le letture;",
-                four = "una volta completato l'inserimento, conferma con Ctrl + Invio."
+                a = "Compila i campi sovrastanti;",
+                b = "seleziona una massa pari a circa un terzo del massimo dell'intervallo di taratura;",
+                c = "carica la massa nelle posizioni indicate nello schema e annota le letture;",
+                d = "fai doppio click nella tabella per inserire le letture;",
+                e = "una volta completato l'inserimento, conferma con Ctrl + Invio."
               ) |>
                 list_to_li()
             )
@@ -95,14 +99,77 @@ mod_04_measure_ui <- function(id) {
       ##### repeatability ui ----
       bslib::nav_panel(title = "Ripetibilità",
 
-                       DT::DTOutput(ns("repeatability"))),
+                       bslib::layout_columns(
+                         col_widths = c(6, 3),
+
+                         bslib::card(
+                           bslib::card_body(
+                             numericInput(
+                               ns("repload"),
+                               "Massa utilizzata (g):",
+                               value = 0,
+                               min = 0
+                             ),
+
+                             DT::DTOutput(ns("repeatability")),
+
+                           ),
+
+                           bslib::card_body(
+                             htmlOutput(ns("represult"))
+                           )
+                         ),
+
+                         bslib::card(
+                           bslib::card_header(shiny::icon("circle-info"), "Cosa devi fare"),
+                           bslib::card_body(
+                             list(
+                               a = "seleziona una massa all'interno dell'intervallo di taratura;",
+                               b = "esegui 11 misure ripetute e annota le letture;",
+                               c = "fai doppio click nella tabella per inserire le letture;",
+                               d = "una volta completato l'inserimento, conferma con Ctrl + Invio."
+                             ) |>
+                               list_to_li()
+                           )
+                         )
+
+                       )
+      ),
 
       ##### linearity ui ----
       bslib::nav_panel(title = "Linearità",
 
-                       DT::DTOutput(ns("linearity")))
+                       bslib::layout_columns(
+                         col_widths = c(9, 3),
 
+                       bslib::card(
+                         bslib::card_body(
 
+                           DT::DTOutput(ns("linearity")),
+
+                         ),
+
+                         bslib::card_body(
+                           htmlOutput(ns("linresult"))
+                         )
+                       ),
+
+                       bslib::card(
+                         bslib::card_header(shiny::icon("circle-info"), "Cosa devi fare"),
+                         bslib::card_body(
+                           list(
+                             a = "seleziona una massa all'interno dell'intervallo di taratura;",
+                             b = "esegui 11 misure ripetute e annota le letture;",
+                             c = "fai doppio click nella tabella per inserire le letture;",
+                             d = "una volta completato l'inserimento, conferma con Ctrl + Invio."
+                           ) |>
+                             list_to_li()
+                         )
+                       )
+
+      )
+
+    )
     ),
 
     tags$div(style = "padding-bottom: 30px",
@@ -111,7 +178,7 @@ mod_04_measure_ui <- function(id) {
   )
 }
 
-#' 03_measure Server Functions
+#' 04_measure Server Functions
 #'
 #' @noRd
 mod_04_measure_server <- function(id, r){
@@ -128,7 +195,7 @@ mod_04_measure_server <- function(id, r){
                                   DI = rep(NA, times = 5)
     )
 
-    # for the first set of eccentricity measurements
+    # reactive values for eccentricity measurements
     eccrv <- reactiveValues(data = eccentricity_df)
 
     # eccentricity table
@@ -159,9 +226,70 @@ mod_04_measure_server <- function(id, r){
     output$eccresult <- renderText({eccresult()$result})
 
     #### repeatability server ----
+    # empty dataframe for repeatability
+    repeatability_df <- data.frame(posizione = 1:10,
+                                   lettura = rep(NA, times = 10)
+    )
+
+    # reactive values for repeatability measurements
+    reprv <- reactiveValues(data = repeatability_df)
+
+    # repeatability table
+    output$repeatability <- DT::renderDT({
+      DTrepeatability(reprv$data)
+    })
+
+    # table editing
+    observeEvent(input$repeatability_cell_edit, {
+
+      reprv$data <- DT::editData(reprv$data, input$repeatability_cell_edit, "repeatability", rownames = FALSE)
+      reprv$data$lettura <- reprv$data$lettura |> as.numeric()
+    })
+
+    # repeatability results
+    represult <- reactive({
+      repeatabilityresult(measures = reprv$data$lettura,
+                          mydigits = r$scale$signifdigits,
+                          massload = input$repload,
+                          minfield = input$minfield,
+                          maxfield = input$maxfield,
+                          mincal = input$mincal,
+                          maxcal = input$maxcal,
+                          givensd = input$gsd)
+    })
+
+    output$represult <- renderText({represult()$result})
 
 
     #### linearity server ----
+    #empty dataframe for linearity test
+    load_df <- data.frame(pos_up = 1:11,
+                          val_nom = rep(NA, times = 11) |> as.numeric(),
+                          val_conv = rep(NA, times = 11) |> as.numeric(),
+                          lettura_up = rep(NA, times = 11) |> as.numeric(),
+                          error_up = rep(NA, times = 11) |> as.numeric(),
+                          pos_down = 11:1,
+                          lettura_down = rep(NA, times = 11) |> as.numeric(),
+                          error_down = rep(NA, times = 11) |> as.numeric(),
+                          avg_error = rep(NA, times = 11) |> as.numeric()
+    )
+
+    # reactive values for load measurements
+    loadrv <- reactiveValues(data = load_df)
+
+    output$linearity <- DT::renderDT({
+      DTlinearity(loadrv$data, r$scale$signifdigits)
+    })
+
+    # when the table is edited the differences are computed
+    observeEvent(input$load_cell_edit, {
+
+      loadrv$data <- DT::editData(loadrv$data, input$load_cell_edit, "load", rownames = FALSE)
+
+      loadrv$data$error_up <- (loadrv$data$lettura_up - loadrv$data$val_conv)
+      loadrv$data$error_down <- (loadrv$data$lettura_down - loadrv$data$val_conv)
+      loadrv$data$avg_error <- rowMeans(cbind(loadrv$data$error_up, loadrv$data$error_down), na.rm = TRUE)
+    })
 
 
     #### saving inputs and outputs ----
@@ -175,16 +303,21 @@ mod_04_measure_server <- function(id, r){
         r[[mynamespace]][[x]] <- input[[x]]
       })
 
-
       #### saving the eccentricity output ----
-      resultname <- names(eccresult())
+      eccname <- names(eccresult())
 
-      lapply(resultname, function (x) {
+      lapply(eccname, function (x) {
         r[[mynamespace]][[x]] <- eccresult()[[x]]
       })
 
-    })
+      #### saving the repeatability output ----
+      repname <- names(represult())
 
+      lapply(resultname, function (x) {
+        r[[mynamespace]][[x]] <- represult()[[x]]
+      })
+
+    })
 
   })
 }
