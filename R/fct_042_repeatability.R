@@ -3,12 +3,15 @@
 #' @description A DT for repeatability results
 #'
 #' @param df a dataframe with three columns to be included in the DT.
+#' @param mydigits the significant digits for scale readings.
 #' @return a DT table.
 #' @importFrom DT datatable
 #' @noRd
-DTrepeatability <- function(df) {
+DTrepeatability <- function(df,
+                            mydigits) {
   stopifnot(
     is.data.frame(df),
+    is.numeric(mydigits),
     dim(df)[2] == 2
   )
 
@@ -17,11 +20,12 @@ DTrepeatability <- function(df) {
                selection = "none",
                colnames = c("Ripetizione", "Lettura (g)"),
                rownames = FALSE,
-               fillContainer = TRUE,
+               fillContainer = FALSE,
                editable = list(target = "column",
                                numeric = 1,
                                disable = list(columns = 0))
-  )
+  ) |>
+    DT::formatRound(2, digits = mydigits)
 }
 
 #' Results for repeatability test
@@ -67,7 +71,9 @@ repeatabilityresult <- function(measures,
     mysigformat(mydigits + 1) |>
     as.numeric()
   mycol <- ifelse(myunc > givensd, "text-warning", "text-success")
-  myres <- ifelse(myunc > givensd, "non conforme", "conforme")
+  myres <- ifelse(myunc > givensd,
+                  "non conforme, lo scarto tipo delle prove non è inferiore allo scarto tipo di ripetibilità.",
+                  "conforme, lo scarto tipo delle prove è inferiore allo scarto tipo di ripetibilità.")
   mytext <- if(replength < 10) {
     "Servono 10 misure." |> mywarning()
   } else if (massload > maxcal) {

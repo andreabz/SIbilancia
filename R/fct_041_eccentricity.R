@@ -19,6 +19,7 @@ DTeccentricity <- function(df, mydigits) {
                 selection = "none",
                 colnames = c("Posizione", "Lettura (g)", "Differenza rispetto alla posizione 1 (g)"),
                 rownames = FALSE,
+                fillContainer = FALSE,
                 editable = list(
                   target = "column",
                   numeric = c(1, 2),
@@ -93,7 +94,9 @@ eccentricityresult <- function(differences,
     mysigformat(mydigits + 1) |>
     as.numeric()
   mycol <- ifelse(maxdiff > 3 * givensd, "text-warning", "text-success")
-  myres <- ifelse(maxdiff > 3 * givensd, "non conforme", "conforme")
+  myres <- ifelse(maxdiff > 3 * givensd,
+                  "non conforme, la differenza massima non è inferiore a tre volte lo scarto tipo di ripetibilità.",
+                  "conforme, la differenza massima è inferiore a tre volte lo scarto tipo di ripetibilità.")
   mytext <- if(ecclength < 5) {
     "Servono 5 misure." |> mywarning()
   } else if (massload > maxcal) {
