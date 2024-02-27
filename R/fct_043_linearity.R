@@ -33,7 +33,8 @@ DTlinearity <- function(df, mydigits) {
                                 numeric = 0:8,
                                 disable = list(columns = c(0, 4, 5, 7, 8))
                 )
-  ) |> DT::formatRound(c(5, 8, 9), digits = mydigits + 1)
+  ) |> DT::formatRound(c(5, 8, 9), digits = mydigits + 1) |>
+    DT::formatRound(c(4, 7), digits = mydigits)
 }
 
 
