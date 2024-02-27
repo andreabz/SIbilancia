@@ -54,11 +54,11 @@ mod_04_measure_ui <- function(id) {
 
       ##### eccentricity ui ----
       bslib::nav_panel(
-        fillable = FALSE,
         title = "Eccentricità",
 
         bslib::layout_columns(
           col_widths = c(6, 3, 3),
+
 
           bslib::card(
             bslib::card_body(
@@ -67,17 +67,25 @@ mod_04_measure_ui <- function(id) {
                 "Massa utilizzata (g):",
                 value = 0,
                 min = 0
+                )
               ),
 
+            bslib::card_body(
+              max_height = "300px",
               DT::DTOutput(ns("eccentricity"))
             ),
 
             bslib::card_body(
+              min_height = "120px",
               htmlOutput(ns("eccresult"))
             )
           ),
 
-          bslib::card(bslib::card_body(add_www_img("scale_scheme.png"))),
+          bslib::card(
+            bslib::card_body(
+              add_www_img("scale_scheme.png")
+              )
+            ),
 
           bslib::card(
             bslib::card_header(shiny::icon("circle-info"), "Cosa devi fare"),
@@ -109,13 +117,15 @@ mod_04_measure_ui <- function(id) {
                                "Massa utilizzata (g):",
                                value = 0,
                                min = 0
+                               )
                              ),
 
+                             bslib::card_body(
                              DT::DTOutput(ns("repeatability")),
-
                            ),
 
                            bslib::card_body(
+                             padding = 15,
                              htmlOutput(ns("represult"))
                            )
                          ),
@@ -236,7 +246,7 @@ mod_04_measure_server <- function(id, r){
 
     # repeatability table
     output$repeatability <- DT::renderDT({
-      DTrepeatability(reprv$data)
+      DTrepeatability(reprv$data, r$scale$signifdigits)
     })
 
     # table editing
@@ -282,9 +292,9 @@ mod_04_measure_server <- function(id, r){
     })
 
     # when the table is edited the differences are computed
-    observeEvent(input$load_cell_edit, {
+    observeEvent(input$linearity_cell_edit, {
 
-      loadrv$data <- DT::editData(loadrv$data, input$load_cell_edit, "load", rownames = FALSE)
+      loadrv$data <- DT::editData(loadrv$data, input$linearity_cell_edit, "linearity", rownames = FALSE)
 
       loadrv$data$error_up <- (loadrv$data$lettura_up - loadrv$data$val_conv)
       loadrv$data$error_down <- (loadrv$data$lettura_down - loadrv$data$val_conv)
