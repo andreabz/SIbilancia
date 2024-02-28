@@ -34,7 +34,8 @@ mod_05_report_ui <- function(id){
           textInput(ns("ncert"), "Numero del certificato"),
           dateInput(ns("datecert"), "Data di emissione del certificato",
                     language = "it"),
-          textInput(ns("destcert"), "Destinatario del certificato")
+          textInput(ns("destcert"), "Destinatario del certificato"),
+          textInput(ns("operatorcert"), "Operatore")
 
         )
       )
@@ -55,6 +56,12 @@ mod_05_report_ui <- function(id){
 mod_05_report_server <- function(id, r){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+
+    observeEvent(r$range1, {
+      ranges <- names(r)[grepl("range", names(r))]
+
+
+    })
 
   })
 }
