@@ -17,13 +17,13 @@ mod_04_measure_ui <- function(id) {
   tagList(
     bslib::layout_columns(
       numericInput(
-        ns("minfield"),
+        ns("minuse"),
         "Minimo del campo di utilizzo (g):",
         value = 0,
         min = 0
       ),
       numericInput(
-        ns("maxfield"),
+        ns("maxuse"),
         "Massimo del campo di utilizzo (g):",
         value = 0,
         min = 0
@@ -135,7 +135,8 @@ mod_04_measure_ui <- function(id) {
                            bslib::card_body(
                              list(
                                a = "seleziona una massa all'interno dell'intervallo di taratura;",
-                               b = "esegui 11 misure ripetute e annota le letture;",
+                               b = "carica la massa al centro del piatto della bilancia ed esegui 10 misure ripetute,
+                               annotando le letture;",
                                c = "fai doppio click nella tabella per inserire le letture;",
                                d = "una volta completato l'inserimento, conferma con Ctrl + Invio."
                              ) |>
@@ -226,8 +227,8 @@ mod_04_measure_server <- function(id, r){
       eccentricityresult(differences = eccrv$data$DI,
                           mydigits = r$scale$signifdigits,
                           massload = input$eccload,
-                          minfield = input$minfield,
-                          maxfield = input$maxfield,
+                          minuse = input$minuse,
+                          maxuse = input$maxuse,
                           mincal = input$mincal,
                           maxcal = input$maxcal,
                           givensd = input$gsd)
@@ -261,8 +262,8 @@ mod_04_measure_server <- function(id, r){
       repeatabilityresult(measures = reprv$data$lettura,
                           mydigits = r$scale$signifdigits,
                           massload = input$repload,
-                          minfield = input$minfield,
-                          maxfield = input$maxfield,
+                          minuse = input$minuse,
+                          maxuse = input$maxuse,
                           mincal = input$mincal,
                           maxcal = input$maxcal,
                           givensd = input$gsd)
