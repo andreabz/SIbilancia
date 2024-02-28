@@ -39,8 +39,8 @@ DTrepeatability <- function(df,
 #' @param measures a numeric vector of replicated measures obtained from repeatability test.
 #' @param mydigits number of significant digits.
 #' @param massload the mass loaded on the scale for the test.
-#' @param minfield the minimum of the measurement field to be tested.
-#' @param maxfield the maximum of the measurement field to be tested.
+#' @param minuse the minimum of the usage range to be tested.
+#' @param maxuse the maximum of the usage range to be tested.
 #' @param mincal the minimum of the calibration range.
 #' @param maxcal the maximum of the calibration range.
 #' @param givensd the given standard deviation of the scale.
@@ -52,18 +52,18 @@ DTrepeatability <- function(df,
 repeatabilityresult <- function(measures,
                                 mydigits,
                                 massload,
-                                minfield = 0,
-                                maxfield,
+                                minuse = 0,
+                                maxuse,
                                 mincal = 0,
-                                maxcal = maxfield,
+                                maxcal = maxuse,
                                 givensd) {
 
   req(measures |> is.numeric())
   req(massload |> is.numeric())
   req(maxcal |> is.numeric())
   req(mincal |> is.numeric())
-  req(maxfield |> is.numeric())
-  req(minfield |> is.numeric())
+  req(maxuse |> is.numeric())
+  req(minuse |> is.numeric())
   req(measures[!is.na(measures)] |> length())
 
   replength <- measures[!is.na(measures)] |> length()
@@ -80,9 +80,9 @@ repeatabilityresult <- function(measures,
     "La massa impiegata non può eccedere il massimo dell'intervallo di taratura." |> mywarning()
   } else if (massload < mincal) {
     "La massa impiegata non può essere inferiore al minimo dell'intervallo di taratura." |> mywarning()
-  } else if (maxcal > maxfield) {
+  } else if (maxcal > maxuse) {
     "Il massimo dell'intervallo di taratura non può eccedere il massimo del campo di utilizzo." |> mywarning()
-  } else if (mincal < minfield) {
+  } else if (mincal < minuse) {
     "Il minimo dell'intervallo di taratura non può essere inferiore al minimo del campo di utilizzo." |> mywarning()
   } else {
     glue::glue(
@@ -97,9 +97,9 @@ repeatabilityresult <- function(measures,
     "La massa impiegata non può eccedere il massimo dell'intervallo di taratura."
   } else if (massload < mincal) {
     "La massa impiegata non può essere inferiore al minimo dell'intervallo di taratura."
-  } else if (maxcal > maxfield) {
+  } else if (maxcal > maxuse) {
     "Il massimo dell'intervallo di taratura non può eccedere il massimo del campo di utilizzo."
-  } else if (mincal < minfield) {
+  } else if (mincal < minuse) {
     "Il minimo dell'intervallo di taratura non può essere inferiore al minimo del campo di utilizzo."
   } else {
     glue::glue(
