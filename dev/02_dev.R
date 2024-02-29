@@ -35,6 +35,7 @@ golem::add_module(name = "name_of_module2", with_test = TRUE) # Name of the modu
 golem::add_fct("041_eccentricity", with_test = TRUE)
 golem::add_fct("042_repeatability", with_test = TRUE)
 golem::add_fct("043_linearity", with_test = TRUE)
+golem::add_fct("044_uncertainty", with_test = TRUE)
 golem::add_fct("05_report", with_test = TRUE)
 golem::add_utils("helpers", with_test = TRUE)
 

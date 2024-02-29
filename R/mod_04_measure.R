@@ -46,20 +46,15 @@ mod_04_measure_ui <- function(id) {
         value = 0,
         min = 0
       )
-
     ),
-
     bslib::navset_card_tab(
-      #height = 700,
+      # height = 700,
 
       ##### eccentricity ui ----
       bslib::nav_panel(
         title = "Eccentricità",
-
         bslib::layout_columns(
           col_widths = c(6, 3, 3),
-
-
           bslib::card(
             bslib::card_body(
               numericInput(
@@ -67,26 +62,22 @@ mod_04_measure_ui <- function(id) {
                 "Massa utilizzata (g):",
                 value = 0,
                 min = 0
-                )
-              ),
-
+              )
+            ),
             bslib::card_body(
               max_height = "300px",
-              DT::DTOutput(ns("eccentricity"))
+              DT::DTOutput(ns("eccentricity"), width = "500px")
             ),
-
             bslib::card_body(
               min_height = "120px",
               htmlOutput(ns("eccresult"))
             )
           ),
-
           bslib::card(
             bslib::card_body(
               add_www_img("scale_scheme.png")
-              )
-            ),
-
+            )
+          ),
           bslib::card(
             bslib::card_header(shiny::icon("circle-info"), "Cosa devi fare"),
             bslib::card_body(
@@ -100,92 +91,105 @@ mod_04_measure_ui <- function(id) {
                 list_to_li()
             )
           )
-
         )
       ),
 
       ##### repeatability ui ----
-      bslib::nav_panel(title = "Ripetibilità",
-
-                       bslib::layout_columns(
-                         col_widths = c(6, 3),
-
-                         bslib::card(
-                           bslib::card_body(
-                             numericInput(
-                               ns("repload"),
-                               "Massa utilizzata (g):",
-                               value = 0,
-                               min = 0
-                               )
-                             ),
-
-                             bslib::card_body(
-                             DT::DTOutput(ns("repeatability")),
-                           ),
-
-                           bslib::card_body(
-                             padding = 15,
-                             htmlOutput(ns("represult"))
-                           )
-                         ),
-
-                         bslib::card(
-                           bslib::card_header(shiny::icon("circle-info"), "Cosa devi fare"),
-                           bslib::card_body(
-                             list(
-                               a = "seleziona una massa all'interno dell'intervallo di taratura;",
-                               b = "carica la massa al centro del piatto della bilancia ed esegui 10 misure ripetute,
+      bslib::nav_panel(
+        title = "Ripetibilità",
+        bslib::layout_columns(
+          col_widths = c(6, 3),
+          bslib::card(
+            bslib::card_body(
+              numericInput(
+                ns("repload"),
+                "Massa utilizzata (g):",
+                value = 0,
+                min = 0
+              )
+            ),
+            bslib::card_body(
+              DT::DTOutput(ns("repeatability"), width = "500px"),
+            ),
+            bslib::card_body(
+              padding = 15,
+              htmlOutput(ns("represult"))
+            )
+          ),
+          bslib::card(
+            bslib::card_header(shiny::icon("circle-info"), "Cosa devi fare"),
+            bslib::card_body(
+              list(
+                a = "seleziona una massa all'interno dell'intervallo di taratura;",
+                b = "carica la massa al centro del piatto della bilancia ed esegui 10 misure ripetute,
                                annotando le letture;",
-                               c = "fai doppio click nella tabella per inserire le letture;",
-                               d = "una volta completato l'inserimento, conferma con Ctrl + Invio."
-                             ) |>
-                               list_to_li()
-                           )
-                         )
-
-                       )
+                c = "fai doppio click nella tabella per inserire le letture;",
+                d = "una volta completato l'inserimento, conferma con Ctrl + Invio."
+              ) |>
+                list_to_li()
+            )
+          )
+        )
       ),
 
       ##### linearity ui ----
-      bslib::nav_panel(title = "Linearità",
-
-                       bslib::layout_columns(
-                         col_widths = c(9, 3),
-
-                       bslib::card(
-                         bslib::card_body(
-
-                           DT::DTOutput(ns("linearity")),
-
-                         ),
-
-                         bslib::card_body(
-                           htmlOutput(ns("linresult"))
-                         )
-                       ),
-
-                       bslib::card(
-                         bslib::card_header(shiny::icon("circle-info"), "Cosa devi fare"),
-                         bslib::card_body(
-                           list(
-                             a = "seleziona una massa all'interno dell'intervallo di taratura;",
-                             b = "esegui 11 misure ripetute e annota le letture;",
-                             c = "fai doppio click nella tabella per inserire le letture;",
-                             d = "una volta completato l'inserimento, conferma con Ctrl + Invio."
-                           ) |>
-                             list_to_li()
-                         )
-                       )
-
+      bslib::nav_panel(
+        title = "Linearità",
+        bslib::layout_columns(
+          col_widths = c(9, 3),
+          bslib::card(
+            bslib::card_body(
+              DT::DTOutput(ns("linearity"), width = "95%"),
+            ),
+            bslib::card_body(
+              htmlOutput(ns("linresult"))
+            )
+          ),
+          bslib::card(
+            bslib::card_header(shiny::icon("circle-info"), "Cosa devi fare"),
+            bslib::card_body(
+              list(
+                a = "seleziona una massa all'interno dell'intervallo di taratura;",
+                b = "esegui 11 misure ripetute e annota le letture;",
+                c = "fai doppio click nella tabella per inserire le letture;",
+                d = "una volta completato l'inserimento, conferma con Ctrl + Invio."
+              ) |>
+                list_to_li()
+            )
+          )
+        )
+      ),
+      bslib::nav_panel(
+        title = "Incertezza",
+        bslib::layout_columns(
+          col_widths = c(9, 3),
+          bslib::card(
+            bslib::card_body(
+              DT::DTOutput(ns("uncertainty"), width = "550px"),
+            ),
+            bslib::card_body(
+              htmlOutput(ns("uncresult"))
+            )
+          ),
+          bslib::card(
+            bslib::card_header(shiny::icon("circle-info"), "Cosa devi fare"),
+            bslib::card_body(
+              list(
+                a = "seleziona una massa all'interno dell'intervallo di taratura;",
+                b = "esegui 11 misure ripetute e annota le letture;",
+                c = "fai doppio click nella tabella per inserire le letture;",
+                d = "una volta completato l'inserimento, conferma con Ctrl + Invio."
+              ) |>
+                list_to_li()
+            )
+          )
+        )
       )
-
-    )
     ),
-
-    tags$div(style = "padding-bottom: 15px",
-             actionButton(ns("nextbtn"), "Avanti", width = '10%'))
-
+    tags$div(
+      style = "padding-bottom: 15px",
+      actionButton(ns("nextbtn"), "Avanti", width = "10%")
+    )
   )
 }
 
@@ -300,6 +304,27 @@ mod_04_measure_server <- function(id, r){
       loadrv$data$error_up <- (loadrv$data$lettura_up - loadrv$data$val_conv)
       loadrv$data$error_down <- (loadrv$data$lettura_down - loadrv$data$val_conv)
       loadrv$data$avg_error <- rowMeans(cbind(loadrv$data$error_up, loadrv$data$error_down), na.rm = TRUE)
+    })
+
+    #### uncertainty server ----
+    mycaluncertainty <- reactive({
+      caluncertainty(mass = loadrv$data$val_nom,
+                     readformat = r$scale$nfor,
+                     ucert = 0,
+                     uecc = eccresult()$uncecc,
+                     eccload = input$eccload,
+                     urep = represult()$uncrep,
+                     avglin = loadrv$data$avg_error)
+    })
+
+    uncert_df <- reactive({
+      data.frame(val_nom = loadrv$data$val_nom,
+                 adjustment = loadrv$data$avg_error,
+                 uncertainty = mycaluncertainty())
+    })
+
+    output$uncertainty <- DT::renderDT({
+      DTuncertainty(uncert_df(), r$scale$signifdigits)
     })
 
 
