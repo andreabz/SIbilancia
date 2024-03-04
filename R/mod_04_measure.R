@@ -83,12 +83,13 @@ mod_04_measure_ui <- function(id) {
             bslib::card_body(
               list(
                 a = "Compila i campi sovrastanti;",
-                b = "seleziona una massa pari a circa un terzo del massimo dell'intervallo di taratura;",
+                b = "seleziona una massa pari ad almeno un terzo del massimo dell'intervallo di taratura;",
                 c = "carica la massa nelle posizioni indicate nello schema e annota le letture;",
                 d = "fai doppio click nella tabella per inserire le letture;",
                 e = "una volta completato l'inserimento, conferma con Ctrl + Invio."
               ) |>
-                list_to_li()
+                list_to_li() |>
+                tags$ul()
             )
           )
         )
@@ -120,13 +121,14 @@ mod_04_measure_ui <- function(id) {
             bslib::card_header(shiny::icon("circle-info"), "Cosa devi fare"),
             bslib::card_body(
               list(
-                a = "seleziona una massa all'interno dell'intervallo di taratura;",
+                a = "Seleziona una massa posta circa a metà dell'intervallo di taratura;",
                 b = "carica la massa al centro del piatto della bilancia ed esegui 10 misure ripetute,
                                annotando le letture;",
                 c = "fai doppio click nella tabella per inserire le letture;",
                 d = "una volta completato l'inserimento, conferma con Ctrl + Invio."
               ) |>
-                list_to_li()
+                list_to_li()|>
+                tags$ul()
             )
           )
         )
@@ -149,12 +151,15 @@ mod_04_measure_ui <- function(id) {
             bslib::card_header(shiny::icon("circle-info"), "Cosa devi fare"),
             bslib::card_body(
               list(
-                a = "seleziona una massa all'interno dell'intervallo di taratura;",
-                b = "esegui 11 misure ripetute e annota le letture;",
-                c = "fai doppio click nella tabella per inserire le letture;",
-                d = "una volta completato l'inserimento, conferma con Ctrl + Invio."
+                a = "Seleziona dieci masse circa equispaziate all'interno dell'intervallo di taratura;",
+                b = "esegui una misura a carico nullo;",
+                c = "carica pesi crescenti al centro del piatto delle bilancia e annota le letture;",
+                d = "ripeti le letture caricando pesi decrescenti;",
+                e = "fai doppio click nella tabella per inserire le letture;",
+                f = "una volta completato l'inserimento, conferma con Ctrl + Invio."
               ) |>
-                list_to_li()
+                list_to_li() |>
+                tags$ul()
             )
           )
         )
@@ -175,13 +180,8 @@ mod_04_measure_ui <- function(id) {
           bslib::card(
             bslib::card_header(shiny::icon("circle-info"), "Cosa devi fare"),
             bslib::card_body(
-              list(
-                a = "seleziona una massa all'interno dell'intervallo di taratura;",
-                b = "esegui 11 misure ripetute e annota le letture;",
-                c = "fai doppio click nella tabella per inserire le letture;",
-                d = "una volta completato l'inserimento, conferma con Ctrl + Invio."
-              ) |>
-                list_to_li()
+              "Ripeti i test di eccentricità, ripetibilità e linearità
+              per tutti gli intervalli di taratura previsti dalla bilancia."
             )
           )
         )
@@ -368,8 +368,18 @@ mod_04_measure_server <- function(id, r){
       #### saving the repeatability output ----
       repname <- names(represult())
 
-      lapply(resultname, function (x) {
+      lapply(repname, function (x) {
         r[[mynamespace]][[x]] <- represult()[[x]]
+      })
+
+      #### saving the linearity output ----
+      r[[mynamespace]]$linearity <- loadrv$data
+
+      #### saving the uncertainty output ----
+      uncname <- names(scaleuncertainty_result())
+
+      lapply(uncname, function (x) {
+        r[[mynamespace]][[x]] <- scaleuncertainty_result()[[x]]
       })
 
     })
