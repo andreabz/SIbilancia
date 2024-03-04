@@ -159,6 +159,7 @@ mod_04_measure_ui <- function(id) {
           )
         )
       ),
+      #### uncertainty ui ----
       bslib::nav_panel(
         title = "Incertezza",
         bslib::layout_columns(
@@ -307,6 +308,7 @@ mod_04_measure_server <- function(id, r){
     })
 
     #### uncertainty server ----
+    # calibration uncertainty
     mycaluncertainty <- reactive({
       caluncertainty(mass = loadrv$data$val_nom,
                      readformat = r$scale$nfor,
@@ -327,6 +329,23 @@ mod_04_measure_server <- function(id, r){
       DTuncertainty(uncert_df(), r$scale$signifdigits)
     })
 
+    # usage uncertainty
+    scaleuncertainty <- reactive({
+      req(uncert_df())
+
+      usageuncertainty(adjustments = uncert_df()$adjustment,
+                       uncertainties = uncert_df()$uncertainty,
+                       mydigits = r$scale$signifdigits)
+    })
+
+    scaleuncertainty_result <- reactive({
+      usageuncertainty_result(givensd = input$gsd,
+                              uncusage = scaleuncertainty())
+    })
+
+    output$uncresult <- renderText({
+      scaleuncertainty_result()$htmlresult
+    })
 
     #### saving inputs and outputs ----
     observeEvent(input$nextbtn, {
