@@ -71,11 +71,11 @@ usageuncertainty <- function(adjustments,
 #' @return a list with HTML and Markdown test results.
 #' @importFrom glue glue
 #' @noRd
-usageuncertainty_result <- function(gsd,
+usageuncertainty_result <- function(givensd,
                                     uncusage) {
 
   stopifnot(
-    is.numeric(gsd),
+    is.numeric(givensd),
     is.numeric(uncusage)
   )
 
@@ -136,7 +136,7 @@ caluncertainty <- function(mass,
   )
 
   u_dmM <- 0.00002
-  u_mpe <- oiml_r111[which(c(oiml_r111$nominal_g %in% mass)), "e2"] / (4 * sqrt(3)) / 1000 # table value in mg
+  u_mpe <- oiml_r111[match(mass, oiml_r111$nominal_g), "e2"] / (4 * sqrt(3)) / 1000 # table value in mg
   u_mc <- 0 # add the contribution from the certified reference masses
   u_md <- 2 * 1.7 * u_mc / sqrt(3)
   u_ecc <- uecc / (4 * sqrt(3)) * (mass / eccload)
