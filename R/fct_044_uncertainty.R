@@ -94,7 +94,8 @@ usageuncertainty_result <- function(givensd,
     "* esito: {myres}
      * incertezza estesa d'uso al livello di fiducia del 95% (k = 2) = {uncusage} g")
 
-  list(htmlresult = myhtmlresult,
+  list(uncusage = uncusage,
+       htmlresult = myhtmlresult,
        mrkdresult = mymrkdresult)
 
 }
