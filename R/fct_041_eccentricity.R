@@ -67,8 +67,9 @@ eccdiff <- function(readings, mydigits) {
 #' @param givensd the given standard deviation of the scale.
 #' @return a list with the standard deviation inferred from the maximum
 #' difference (eccentricity_maxdiff), the uncertainty contribution (eccentricity_uncertainty),
-#' a HTML formatted result (eccentricity_html) and a Markdown
-#' formatted result (eccentricity_md).
+#' a HTML formatted result (eccentricity_html), a Markdown
+#' formatted result (eccentricity_md) and a flag (eccentricity_flag). The flag
+#' is TRUE for a passed test and FALSE for a failed test.
 #' @importFrom glue glue
 #' @noRd
 eccentricity_result <- function(differences,
@@ -94,8 +95,9 @@ eccentricity_result <- function(differences,
   myunc <- (maxdiff/(2 * sqrt(3))) |>
     mysigformat(mydigits + 1) |>
     as.numeric()
-  mycol <- ifelse(maxdiff > 3 * givensd, "text-warning", "text-success")
-  myres <- ifelse(maxdiff > 3 * givensd,
+  myflag <- ifelse(maxdiff > 3 * givensd, FALSE, TRUE)
+  mycol <- ifelse(isFALSE(myflag), "text-warning", "text-success")
+  myres <- ifelse(isFALSE(myflag),
                   "non conforme, la differenza massima non è inferiore a tre volte lo scarto tipo di ripetibilità.",
                   "conforme, la differenza massima è inferiore a tre volte lo scarto tipo di ripetibilità.")
   mytext <- if(ecclength < 5) {
@@ -137,6 +139,7 @@ eccentricity_result <- function(differences,
   list(eccentricity_maxdiff = maxdiff,
        eccentricity_uncertainty = myunc,
        eccentricity_html = mytext,
-       eccentricity_md = myplaintext
+       eccentricity_md = myplaintext,
+       eccentricity_flag = myflag
   )
 }

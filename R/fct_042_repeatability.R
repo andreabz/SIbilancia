@@ -45,8 +45,9 @@ DTrepeatability <- function(df,
 #' @param maxcal the maximum of the calibration range.
 #' @param givensd the given standard deviation of the scale.
 #' @return a list with the uncertainty contribution (repeatability_uncertainty),
-#' a HTML formatted result (repeatability_html) and a Markdown
-#' formatted result (repeatability_md).
+#' a HTML formatted result (repeatability_html), a Markdown
+#' formatted result (repeatability_md) and a flag (repeatability_flag). The flag
+#' is TRUE for a passed test and FALSE for a failed test.
 #' @importFrom glue glue
 #' @noRd
 repeatability_result <- function(measures,
@@ -70,8 +71,9 @@ repeatability_result <- function(measures,
   myunc <- sd(measures) |>
     mysigformat(mydigits + 1) |>
     as.numeric()
-  mycol <- ifelse(myunc > givensd, "text-warning", "text-success")
-  myres <- ifelse(myunc > givensd,
+  myflag <- ifelse(myunc > givensd, FALSE, TRUE)
+  mycol <- ifelse(isFALSE(myflag), "text-warning", "text-success")
+  myres <- ifelse(isFALSE(myflag),
                   "non conforme, lo scarto tipo delle prove non è inferiore allo scarto tipo di ripetibilità.",
                   "conforme, lo scarto tipo delle prove è inferiore allo scarto tipo di ripetibilità.")
   mytext <- if(replength < 10) {
@@ -110,6 +112,7 @@ repeatability_result <- function(measures,
 
   list(repeatability_uncertainty = myunc,
        repeatability_html = mytext,
-       repeatability_md = myplaintext
+       repeatability_md = myplaintext,
+       repeatability_flag = myflag
   )
 }

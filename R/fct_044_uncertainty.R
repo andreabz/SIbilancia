@@ -69,8 +69,9 @@ usageuncertainty <- function(adjustments,
 #' @param givensd given scale repeatability standard deviation.
 #' @param uncusage extended usage uncertainty of the scale.
 #' @return a list with the usage extended uncertainty (usage_uncertainty),
-#' a HTML formatted result (usage_html) and a Markdown
-#' formatted result (usage_md).
+#' a HTML formatted result (usage_html), a Markdown
+#' formatted result (usage_md) and a flag (usage_flag). The flag
+#' is TRUE for a passed test and FALSE for a failed test.
 #' @importFrom glue glue
 #' @noRd
 usageuncertainty_result <- function(givensd,
@@ -81,10 +82,11 @@ usageuncertainty_result <- function(givensd,
     is.numeric(uncusage)
   )
 
-  myres <- ifelse(uncusage > 4 * givensd,
+  myflag <- ifelse(uncusage > 4 * givensd, FALSE, TRUE)
+  myres <- ifelse(isFALSE(myflag),
                   "non conforme, l'incertezza estesa d'uso è maggiore di quattro volte lo scarto tipo di ripetibilità.",
                   "conforme,  l'incertezza estesa d'uso è minore di quattro volte lo scarto tipo di ripetibilità.")
-  mycol <- ifelse(uncusage > 4 * givensd, "text-warning", "text-success")
+  mycol <- ifelse(isFALSE(myflag), "text-warning", "text-success")
 
   myhtmlresult <- glue::glue(
     "<ul>
@@ -96,10 +98,12 @@ usageuncertainty_result <- function(givensd,
     "* esito: {myres}
      * incertezza estesa d'uso al livello di fiducia del 95% (k = 2) = {uncusage} g")
 
-  list(usage_uncertainty = uncusage,
-       usage_html = myhtmlresult,
-       usage_md = mymrkdresult)
-
+  list(
+    usage_uncertainty = uncusage,
+    usage_html = myhtmlresult,
+    usage_md = mymrkdresult,
+    usage_flag = myflag
+    )
 }
 
 #' calculating the extended calibration uncertainty of the scale
