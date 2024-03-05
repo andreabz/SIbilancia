@@ -72,7 +72,7 @@ repeatability_result <- function(measures,
     mysigformat(mydigits + 1) |>
     as.numeric()
   myflag <- ifelse(myunc > givensd, FALSE, TRUE)
-  mycol <- ifelse(isFALSE(myflag), "text-warning", "text-success")
+  mycol <- ifelse(isFALSE(myflag), "text-danger", "text-success")
   myres <- ifelse(isFALSE(myflag),
                   "non conforme, lo scarto tipo delle prove non è inferiore allo scarto tipo di ripetibilità.",
                   "conforme, lo scarto tipo delle prove è inferiore allo scarto tipo di ripetibilità.")

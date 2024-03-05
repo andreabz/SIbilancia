@@ -96,7 +96,7 @@ eccentricity_result <- function(differences,
     mysigformat(mydigits + 1) |>
     as.numeric()
   myflag <- ifelse(maxdiff > 3 * givensd, FALSE, TRUE)
-  mycol <- ifelse(isFALSE(myflag), "text-warning", "text-success")
+  mycol <- ifelse(isFALSE(myflag), "text-danger", "text-success")
   myres <- ifelse(isFALSE(myflag),
                   "non conforme, la differenza massima non è inferiore a tre volte lo scarto tipo di ripetibilità.",
                   "conforme, la differenza massima è inferiore a tre volte lo scarto tipo di ripetibilità.")

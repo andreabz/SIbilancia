@@ -86,7 +86,7 @@ usageuncertainty_result <- function(givensd,
   myres <- ifelse(isFALSE(myflag),
                   "non conforme, l'incertezza estesa d'uso è maggiore di quattro volte lo scarto tipo di ripetibilità.",
                   "conforme,  l'incertezza estesa d'uso è minore di quattro volte lo scarto tipo di ripetibilità.")
-  mycol <- ifelse(isFALSE(myflag), "text-warning", "text-success")
+  mycol <- ifelse(isFALSE(myflag), "text-danger", "text-success")
 
   myhtmlresult <- glue::glue(
     "<ul>
