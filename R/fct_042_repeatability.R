@@ -44,19 +44,19 @@ DTrepeatability <- function(df,
 #' @param mincal the minimum of the calibration range.
 #' @param maxcal the maximum of the calibration range.
 #' @param givensd the given standard deviation of the scale.
-#' @return a list with the standard deviation of the measures (meassd),
-#' the uncertainty contribution (uncrep), an HTML formatted result (result) and a Markdown
-#' formatted result (plairesult).
+#' @return a list with the uncertainty contribution (repeatability_uncertainty),
+#' a HTML formatted result (repeatability_html) and a Markdown
+#' formatted result (repeatability_md).
 #' @importFrom glue glue
 #' @noRd
-repeatabilityresult <- function(measures,
-                                mydigits,
-                                massload,
-                                minuse = 0,
-                                maxuse,
-                                mincal = 0,
-                                maxcal = maxuse,
-                                givensd) {
+repeatability_result <- function(measures,
+                                 mydigits,
+                                 massload,
+                                 minuse = 0,
+                                 maxuse,
+                                 mincal = 0,
+                                 maxcal = maxuse,
+                                 givensd) {
 
   req(measures |> is.numeric())
   req(massload |> is.numeric())
@@ -108,8 +108,8 @@ repeatabilityresult <- function(measures,
     )
   }
 
-  list(uncrep = myunc,
-       result = mytext,
-       plainresult = myplaintext
+  list(repeatability_uncertainty = myunc,
+       repeatability_html = mytext,
+       repeatability_md = myplaintext
   )
 }

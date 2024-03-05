@@ -68,7 +68,9 @@ usageuncertainty <- function(adjustments,
 #'
 #' @param givensd given scale repeatability standard deviation.
 #' @param uncusage extended usage uncertainty of the scale.
-#' @return a list with HTML and Markdown test results.
+#' @return a list with the usage extended uncertainty (usage_uncertainty),
+#' a HTML formatted result (usage_html) and a Markdown
+#' formatted result (usage_md).
 #' @importFrom glue glue
 #' @noRd
 usageuncertainty_result <- function(givensd,
@@ -94,9 +96,9 @@ usageuncertainty_result <- function(givensd,
     "* esito: {myres}
      * incertezza estesa d'uso al livello di fiducia del 95% (k = 2) = {uncusage} g")
 
-  list(uncusage = uncusage,
-       htmlresult = myhtmlresult,
-       mrkdresult = mymrkdresult)
+  list(usage_uncertainty = uncusage,
+       usage_html = myhtmlresult,
+       usage_md = mymrkdresult)
 
 }
 

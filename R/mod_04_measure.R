@@ -180,8 +180,16 @@ mod_04_measure_ui <- function(id) {
           bslib::card(
             bslib::card_header(shiny::icon("circle-info"), "Cosa devi fare"),
             bslib::card_body(
-              "Ripeti i test di eccentricità, ripetibilità e linearità
-              per tutti gli intervalli di taratura previsti dalla bilancia."
+              list(
+                a = "Clicca sul menù Misure, posto nella barra blu in alto;",
+                b = "nel caso sia presente più di un intervallo di taratura,
+                spostati tra di essi cliccando sui
+                relativi pulsanti;",
+                c = "ripeti i test di eccentricità, ripetibilità e linearità
+                per tutti gli intervalli di taratura previsti dalla bilancia."
+              ) |>
+                list_to_li() |>
+                tags$ul()
             )
           )
         )
@@ -229,7 +237,7 @@ mod_04_measure_server <- function(id, r){
 
     # eccentricity results
     eccresult <- reactive({
-      eccentricityresult(differences = eccrv$data$DI,
+      eccentricity_result(differences = eccrv$data$DI,
                           mydigits = r$scale$signifdigits,
                           massload = input$eccload,
                           minuse = input$minuse,
@@ -239,7 +247,7 @@ mod_04_measure_server <- function(id, r){
                           givensd = input$gsd)
     })
 
-    output$eccresult <- renderText({eccresult()$result})
+    output$eccresult <- renderText({eccresult()$eccentricity_html})
 
     #### repeatability server ----
     # empty dataframe for repeatability
@@ -264,17 +272,17 @@ mod_04_measure_server <- function(id, r){
 
     # repeatability results
     represult <- reactive({
-      repeatabilityresult(measures = reprv$data$lettura,
-                          mydigits = r$scale$signifdigits,
-                          massload = input$repload,
-                          minuse = input$minuse,
-                          maxuse = input$maxuse,
-                          mincal = input$mincal,
-                          maxcal = input$maxcal,
-                          givensd = input$gsd)
+      repeatability_result(measures = reprv$data$lettura,
+                           mydigits = r$scale$signifdigits,
+                           massload = input$repload,
+                           minuse = input$minuse,
+                           maxuse = input$maxuse,
+                           mincal = input$mincal,
+                           maxcal = input$maxcal,
+                           givensd = input$gsd)
     })
 
-    output$represult <- renderText({represult()$result})
+    output$represult <- renderText({represult()$repeatability_html})
 
 
     #### linearity server ----
@@ -313,9 +321,9 @@ mod_04_measure_server <- function(id, r){
       caluncertainty(mass = loadrv$data$val_nom,
                      readformat = r$scale$nfor,
                      ucert = 0,
-                     uecc = eccresult()$uncecc,
+                     uecc = eccresult()$eccentricity_uncertainty,
                      eccload = input$eccload,
-                     urep = represult()$uncrep,
+                     urep = represult()$repeatability_uncertainty,
                      avglin = loadrv$data$avg_error)
     })
 
@@ -344,7 +352,7 @@ mod_04_measure_server <- function(id, r){
     })
 
     output$uncresult <- renderText({
-      scaleuncertainty_result()$htmlresult
+      scaleuncertainty_result()$usage_html
     })
 
     #### saving inputs and outputs ----

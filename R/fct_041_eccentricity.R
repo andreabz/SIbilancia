@@ -65,12 +65,13 @@ eccdiff <- function(readings, mydigits) {
 #' @param mincal the minimum of the calibration range.
 #' @param maxcal the maximum of the calibration range.
 #' @param givensd the given standard deviation of the scale.
-#' @return a list with the standard deviation inferred from the maximum difference (maxdiff),
-#' the uncertainty contribution (uncecc), an HTML formatted result (result) and a Markdown
-#' formatted result (plairesult).
+#' @return a list with the standard deviation inferred from the maximum
+#' difference (eccentricity_maxdiff), the uncertainty contribution (eccentricity_uncertainty),
+#' a HTML formatted result (eccentricity_html) and a Markdown
+#' formatted result (eccentricity_md).
 #' @importFrom glue glue
 #' @noRd
-eccentricityresult <- function(differences,
+eccentricity_result <- function(differences,
                                mydigits = 4,
                                massload,
                                minuse = 0,
@@ -133,9 +134,9 @@ eccentricityresult <- function(differences,
     )
   }
 
-  list(maxdiff = maxdiff,
-       uncecc = myunc,
-       result = mytext,
-       plainresult = myplaintext
+  list(eccentricity_maxdiff = maxdiff,
+       eccentricity_uncertainty = myunc,
+       eccentricity_html = mytext,
+       eccentricity_md = myplaintext
   )
 }
