@@ -2,60 +2,52 @@
 #'
 #' @description a card with the results of scale calibration.
 #'
-#' @param header header of the card.
-#' @param table DT with the results of the calibration.
-#' @param htmlresult textual result of the calibration.
-#' @param minuse minimum of the usage range.
-#' @param maxuse maximum of the usage range.
 #' @param mincal minimum of the calibration range.
 #' @param maxcal maximum of the calibration range.
-#' @param givensd given scale repeatability standard deviation.
-#' @param uncusage extended usage uncertainty of the scale.
-#' @return a bslib card
-#' @importFrom bslib card card_body card_header
+#' @param eccentricity_flag the flag for the eccentricity test. TRUE for passed
+#' and FALSE for failed test.
+#' @param repeatability_flag the flag for the repeatability test. TRUE for passed
+#' and FALSE for failed test.
+#' @param uncertainty_flag the flag for the uncertainty test. TRUE for passed
+#' and FALSE for failed test.
+#' @param ucertainty_usage extended usage uncertainty of the scale.
+#' @return a html list with the calibration summary.
 #' @importFrom glue glue
 #' @noRd
-result_card <- function(header,
-                        table,
-                        htmlresult,
-                        minuse,
-                        maxuse,
-                        mincal,
-                        maxcal,
-                        givensd,
-                        uncusage){
-
+calibration_summary <- function(mincal,
+                                maxcal,
+                                eccentricity_flag,
+                                repeatability_flag,
+                                uncertainty_flag,
+                                uncertainty_usage){
   stopifnot(
-    is.character(header),
-    is.character(htmlresult),
-    is.numeric(minuse),
-    is.numeric(maxuse),
     is.numeric(mincal),
     is.numeric(maxcal),
-    is.numeric(givensd),
-    is.numeric(uncusage),
-  )
-
-  myuserange <- glue::glue("campo di utilizzo: {minuse}-{maxuse} g")
-  mycalrange <- glue::glue("intervallo di calibrazione: {mincal}-{maxcal} g")
-  mygivensd <- glue::glue("scarto tipo di ripetibilità: {givensd} g")
-
-  bslib::card(
-    bslib::card_header(header),
-    bslib::card_body(
-
-      glue::glue(
-        "<ul>
-          <li> {myuserange} </li>
-          <li> {mycalrange} </li>
-          <li> {mygivensd} </li>
-        </ul>"
-      ),
-
-    table,
-    htmlresult
-
+    is.logical(eccentricity_flag),
+    is.logical(repeatability_flag),
+    is.logical(uncertainty_flag),
+    is.numeric(uncertainty_usage)
     )
-  )
+
+  eccentricity_test <- tick_cross(eccentricity_flag)
+  repeatability_test <- tick_cross(repeatability_flag)
+  linearity_test <- tick_cross(uncertainty_flag)
+
+  eccentricity_color <- success_danger(eccentricity_flag)
+  repeatability_color <- success_danger(repeatability_flag)
+  linearity_color <- success_danger(uncertainty_flag)
+
+  myuncertainty <- ifelse(is.null(uncertainty_usage), "", paste0(uncertainty_usage, " g"))
+
+  myinterval <- glue::glue("Intervallo di calibrazione: {mincal} - {maxcal} g </br>")
+  mysummarylist <- glue::glue(
+  "<ul>
+    <li class = {eccentricity_color}> eccentricità: {eccentricity_test} </li>
+    <li class = {repeatability_color}> ripetibilità: {repeatability_test} </li>
+    <li class = {linearity_color}> linearità: {linearity_test} </li>
+    <li class = {linearity_color}> incertezza d'uso: {myuncertainty} {linearity_test} </li>
+  </ul>")
+
+  paste0(myinterval, mysummarylist)
 
 }

@@ -83,3 +83,53 @@ add_www_img <- function(filename) {
                            margin-left:auto;
                            margin-right:auto;")
 }
+
+#' Tick or cross icons
+#'
+#' @description A flag is passed to the function, if the flag is TRUE a tick icon
+#' is returned, is the flag is FALSE a cross icon is returned, if the flag is null
+#' a message is returned.
+#'
+#' @param flag a logical element.
+#' @return a HTML string.
+#'
+#' @importFrom shiny icon
+tick_cross <- function(flag) {
+
+  stopifnot(
+    is.null(flag) || is.logical(flag)
+  )
+
+  if (isFALSE(flag)) {
+    paste0(icon("xmark"), " non conforme")
+  } else if (isTRUE(flag)) {
+    paste0(icon("check"), " conforme")
+  } else {
+    paste0(icon("minus"), " non eseguito")
+  }
+
+}
+
+#' Success or danger text color
+#'
+#' @description A flag is passed to the function, if the flag is TRUE text-success
+#' is returned, is the flag is FALSE text-danger is returned, if the flag is null
+#' text-warning is returned.
+#'
+#' @param flag a logical element.
+#' @return a boostrap text color.
+success_danger <- function(flag) {
+
+  stopifnot(
+    is.null(flag) || is.logical(flag)
+  )
+
+  if (isFALSE(flag)) {
+    "text-danger"
+  } else if (isTRUE(flag)) {
+    "text-success"
+  } else {
+    "text-warning"
+  }
+
+}
